@@ -1,3 +1,6 @@
 ﻿cl : command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  SampleParticle.cpp
+  myScene.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  HermiteSpline.cpp
   anim.vcxproj -> C:\Users\slaba\Desktop\uvic degree\comp sci\CSC 473\Assignment 1\Build\anim.exe

@@ -37,6 +37,7 @@ public:
 	ControlPoint getNext(ControlPoint, ControlPoint, double);
 	void updateLookUpTable();
 	
+	
 
 
 protected:
