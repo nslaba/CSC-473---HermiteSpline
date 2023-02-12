@@ -224,6 +224,7 @@ static int testPart2(ClientData clientData, Tcl_Interp* interp, int argc, myCONS
 	assert(success);*/
 	
 	// Create an object to use objectpath to find it's position
+	m_model.ReadOBJ("data/porsche.obj");
 	/*Object* object = new Object("object");
 	success = GlobalResourceManager::use()->addSystem(object, true);
 	assert(success);*/
