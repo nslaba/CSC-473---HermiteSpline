@@ -193,21 +193,39 @@ void myKey(unsigned char key, int x, int y)
 
 }	// myKey
 
-static int testGlobalCommand(ClientData clientData, Tcl_Interp* interp, int argc, myCONST_SPEC char** argv)
-{
-	animTcl::OutputMessage("This is a test command!");
-	animTcl::OutputResult("1000000000");
-	return TCL_OK;
 
-}	// testGlobalCommand
+
+static int testPart1(ClientData clientData, Tcl_Interp* interp, int argc, myCONST_SPEC char** argv)
+{
+	animTcl::OutputMessage("Starting part 1...");
+
+	boolean success;
+
+	HermiteSpline* hermite = new HermiteSpline("hermite");
+	success = GlobalResourceManager::use()->addSystem(hermite, true);
+	assert(success);
+	return TCL_OK;
+}	// test part1
+
+static int testPart2(ClientData clientData, Tcl_Interp* interp, int argc, myCONST_SPEC char** argv)
+{
+	animTcl::OutputMessage("Started part 2.");
+
+	/* STEP 1: Delete systems used for part 1*/
+
+	/* STEP 2: Create an object system*/
+
+
+	/* STEP 3: Create an object simulator*/
+	return TCL_OK;
+}	// test part1
 
 void mySetScriptCommands(Tcl_Interp* interp)
 {
 
-	// here you can register additional generic (they do not belong to any object) 
-	// commands with the shell
-
-	Tcl_CreateCommand(interp, "test", testGlobalCommand, (ClientData)NULL,
+	Tcl_CreateCommand(interp, "part1", testPart1, (ClientData) NULL,
+		(Tcl_CmdDeleteProc*)NULL);
+	Tcl_CreateCommand(interp, "part2", testPart2, (ClientData)NULL,
 		(Tcl_CmdDeleteProc*)NULL);
 
 
