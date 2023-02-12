@@ -23,6 +23,8 @@
 #include "HermiteSpline.h"
 #include "SampleGravitySimulator.h"
 #include "UpDownSimulator.h"
+#include "ObjectPathSimulator.h"
+#include "Object.h"
 //#include <util/jama/tnt_stopwatch.h>
 //#include <util/jama/jama_lu.h>
 
@@ -212,13 +214,30 @@ static int testPart2(ClientData clientData, Tcl_Interp* interp, int argc, myCONS
 	animTcl::OutputMessage("Started part 2.");
 
 	/* STEP 1: Delete systems used for part 1*/
-
+	
 	/* STEP 2: Create an object system*/
+	boolean success;
 
+	// Create an objectpath for the object as an instance of HermiteSpline class
+	/*HermiteSpline* objectpath = new HermiteSpline("objectpath");
+	success = GlobalResourceManager::use()->addSystem(objectpath, true);
+	assert(success);*/
+	
+	// Create an object to use objectpath to find it's position
+	/*Object* object = new Object("object");
+	success = GlobalResourceManager::use()->addSystem(object, true);
+	assert(success);*/
 
-	/* STEP 3: Create an object simulator*/
+	///* STEP 3: Create an object simulator*/
+	//ObjectPathSimulator* objectpathSimulator = new ObjectPathSimulator( "objectpath", objectpath );
+
+	//success = GlobalResourceManager::use()->addSimulator( objectpathSimulator );
+
+	//// make sure it was registered successfully
+	//assert( success );
+
 	return TCL_OK;
-}	// test part1
+}	// test part2
 
 void mySetScriptCommands(Tcl_Interp* interp)
 {

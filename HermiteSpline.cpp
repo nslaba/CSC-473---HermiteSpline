@@ -279,11 +279,6 @@ void HermiteSpline::updateLookUpTable()
 	float deltaU = 1.0 / totalSamples;
 	float u = 0;
 	double arcLength = 0;
-	animTcl::OutputMessage("numKnots is ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(numKnots).c_str()));
-	animTcl::OutputMessage("totalSamples is ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(totalSamples).c_str()));
-	
 	
 	// Variables for arclength
 	ControlPoint next;
