@@ -349,6 +349,7 @@ void HermiteSpline::display(GLenum mode)
 	glVertex3f(controlPoints[numKnots - 1].point.x, controlPoints[numKnots - 1].point.y, controlPoints[numKnots - 1].point.z);
 	
 	glEnd();
+	
 	glColor3f(0.3, 0.7, 0.1);
 
 

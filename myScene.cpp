@@ -199,7 +199,7 @@ void myKey(unsigned char key, int x, int y)
 
 static int testPart1(ClientData clientData, Tcl_Interp* interp, int argc, myCONST_SPEC char** argv)
 {
-	animTcl::OutputMessage("Starting part 1...");
+	animTcl::OutputMessage("Started part 1.");
 
 	boolean success;
 
@@ -223,8 +223,8 @@ static int testPart2(ClientData clientData, Tcl_Interp* interp, int argc, myCONS
 	success = GlobalResourceManager::use()->addSystem(objectpath, true);
 	assert(success);*/
 	
-	// Create an object to use objectpath to find it's position
-	m_model.ReadOBJ("data/porsche.obj");
+	// Create an object to use objectpath to find its position
+	
 	/*Object* object = new Object("object");
 	success = GlobalResourceManager::use()->addSystem(object, true);
 	assert(success);*/
