@@ -30,6 +30,7 @@ public:
 	virtual void getState( double *p );
 	virtual void setState( double  *p );
 
+
 } ;
 
 #endif

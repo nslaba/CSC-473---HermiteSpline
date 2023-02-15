@@ -25,33 +25,39 @@ class HermiteSpline : public BaseSystem
 
 public:
 	HermiteSpline(const std::string& name);
-	virtual void getState(double* p);
-	virtual void setState(double* p);
-	//void reset(double time);
 
+
+	 /*Setters needed for simulation*/
+	// returns the full length --> to know how long the max length is
+	float getFullLength();
+	// returns a Control point at a certain length on the spline
+	ControlPoint getPointAtLength(float s);
+	// returns parameter U based on arclength S
+	float getU(double s);
+
+
+	// Nescessary functions
 	void display(GLenum mode = GL_RENDER);
-
 	int command(int argc, myCONST_SPEC char** argv);
 	float getArcLength(float t);
 	void load(std::string);
 	ControlPoint getNext(ControlPoint, ControlPoint, double);
+	ControlPoint getNextFirstOrder(ControlPoint, ControlPoint, double);
+	ControlPoint getNextSecondOrder(ControlPoint, ControlPoint, double);
 	void updateLookUpTable();
+
+	// Nescessary variables
+	std::vector <LookUpTableEntry> lookUpTable;
 	
 	
 
 
 protected:
-
 	
 	/* Define an array of ControlPoint structs with maximum of 40 control points*/
-	ControlPoint controlPoints[MAX_KNOTS];
-	std::vector <LookUpTableEntry> lookUpTable;
+	ControlPoint controlPoints[MAX_KNOTS];	
 
 	//keeps track of the knots set by the user
 	int numKnots = 0;
-	bool cr = false;
-	Vector m_pos;
-
-	GLMmodel m_model;
 
 };

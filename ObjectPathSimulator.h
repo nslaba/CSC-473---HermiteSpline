@@ -6,8 +6,9 @@
 #include "animTcl.h"
 #include "BaseSimulator.h"
 #include "BaseSystem.h"
-
+#include "HermiteSpline.h"
 #include <string>
+#include "ThreeDModel.h"
 
 // a sample simulator
 
@@ -15,14 +16,16 @@ class ObjectPathSimulator : public BaseSimulator
 {
 public:
 
-	ObjectPathSimulator(const std::string& name, BaseSystem* target);
+	ObjectPathSimulator(const std::string& name, HermiteSpline* targetPath, ThreeDModel* targetObject);
 	~ObjectPathSimulator();
 
 	int step(double time);
 	int init(double time)
 	{
-		m_object->getState(m_pos0);
-		setVector(m_vel0, 0, 0, 0);
+		m_threeDmodel->position;
+
+		// FOR NOW: set threeDmodel's velocity to a constant
+
 		return 0;
 	};
 
@@ -30,11 +33,13 @@ public:
 
 protected:
 
-	Vector m_pos0; // initial position
-	Vector m_vel0; // initial velocity
-	Vector m_pos;
-	Vector m_vel;
+	glm::vec3 m_pos0; // initial position
+	float m_speedInit = 0; // initial velocity
+	glm::vec3 m_pos;
+	// FOR NOW: set threeDmodel's velocity to a constant
+	float m_speed = 5;
 
-	BaseSystem* m_object;
+	ThreeDModel* m_threeDmodel;
+	HermiteSpline* splinePath;
 
 };

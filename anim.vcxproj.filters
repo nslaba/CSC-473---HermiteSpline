@@ -50,7 +50,7 @@
     <ClCompile Include="ObjectPathSimulator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
+    <ClCompile Include="ThreeDModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -94,7 +94,7 @@
     <ClInclude Include="ObjectPathSimulator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
+    <ClInclude Include="ThreeDModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

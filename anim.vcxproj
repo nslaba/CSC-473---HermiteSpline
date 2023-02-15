@@ -107,12 +107,12 @@
     <ClCompile Include="GlobalResourceManager.cpp" />
     <ClCompile Include="HermiteSpline.cpp" />
     <ClCompile Include="myScene.cpp" />
-    <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectPathSimulator.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SampleGravitySimulator.cpp" />
     <ClCompile Include="SampleParticle.cpp" />
     <ClCompile Include="BaseSystem.cpp" />
+    <ClCompile Include="ThreeDModel.cpp" />
     <ClCompile Include="UpDownSimulator.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -124,11 +124,11 @@
     <ClInclude Include="GlobalResourceManager.h" />
     <ClInclude Include="HermiteSpline.h" />
     <ClInclude Include="myScene.h" />
-    <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectPathSimulator.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SampleGravitySimulator.h" />
     <ClInclude Include="SampleParticle.h" />
+    <ClInclude Include="ThreeDModel.h" />
     <ClInclude Include="UpDownSimulator.h" />
   </ItemGroup>
   <ItemGroup>

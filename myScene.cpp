@@ -24,7 +24,7 @@
 #include "SampleGravitySimulator.h"
 #include "UpDownSimulator.h"
 #include "ObjectPathSimulator.h"
-#include "Object.h"
+
 //#include <util/jama/tnt_stopwatch.h>
 //#include <util/jama/jama_lu.h>
 
@@ -94,13 +94,13 @@ void MakeScene(void)
 	/* SAMPLE SCENE */
 	/* THE FOLLOWING IS TO TEST HermiteSpline CLASS WITH A SYSTEM CALLED OBJECTPATH*/
 	// register a system
-	bool success;
-	HermiteSpline* objectpath = new HermiteSpline("objectpath");
+	//bool success;
+	//HermiteSpline* objectpath = new HermiteSpline("objectpath");
 
-	success = GlobalResourceManager::use()->addSystem(objectpath, true);
+	//success = GlobalResourceManager::use()->addSystem(objectpath, true);
 
-	// make sure it was registered successfully
-	assert(success);
+	//// make sure it was registered successfully
+	//assert(success);
 
 	// register a simulator
 
@@ -109,7 +109,7 @@ void MakeScene(void)
 
 	/**************************END OF HermiteSpline SYSTEM INSTANCE************************************/
 
-
+	bool success;
 	//// register a system
 	SampleParticle* sphere1 = new SampleParticle("sphere1");
 
@@ -215,27 +215,26 @@ static int testPart2(ClientData clientData, Tcl_Interp* interp, int argc, myCONS
 
 	/* STEP 1: Delete systems used for part 1*/
 	
-	/* STEP 2: Create an object system*/
+	/* STEP 2: Create an object and path systems*/
 	boolean success;
 
 	// Create an objectpath for the object as an instance of HermiteSpline class
-	/*HermiteSpline* objectpath = new HermiteSpline("objectpath");
+	HermiteSpline* objectpath = new HermiteSpline("objectpath");
 	success = GlobalResourceManager::use()->addSystem(objectpath, true);
-	assert(success);*/
+	assert(success);
+
+	ThreeDModel* threeDmodel = new ThreeDModel("threeDmodel");
+	success = GlobalResourceManager::use()->addSystem(threeDmodel, true);
+	assert(success);
 	
-	// Create an object to use objectpath to find its position
-	
-	/*Object* object = new Object("object");
-	success = GlobalResourceManager::use()->addSystem(object, true);
-	assert(success);*/
 
-	///* STEP 3: Create an object simulator*/
-	//ObjectPathSimulator* objectpathSimulator = new ObjectPathSimulator( "objectpath", objectpath );
+	/* STEP 3: Create an object simulator*/
+	ObjectPathSimulator* objectpathSimulator = new ObjectPathSimulator( "objectpathSimulator", objectpath, threeDmodel);
 
-	//success = GlobalResourceManager::use()->addSimulator( objectpathSimulator );
+	success = GlobalResourceManager::use()->addSimulator( objectpathSimulator );
 
-	//// make sure it was registered successfully
-	//assert( success );
+	// make sure it was registered successfully
+	assert( success );
 
 	return TCL_OK;
 }	// test part2

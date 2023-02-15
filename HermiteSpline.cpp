@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <math.h>
+#include <algorithm>
 
 /* Implement inheritance from BaseSystem.cpp */
 HermiteSpline::HermiteSpline(const std::string& name) :
@@ -12,23 +13,32 @@ HermiteSpline::HermiteSpline(const std::string& name) :
 
 {
 
-	setVector(m_pos, 0, 0, 0);
+}
+	// HermiteSpline
 
-}	// HermiteSpline
 
-void HermiteSpline::getState(double* p)
+float HermiteSpline::getFullLength()
 {
+	return getArcLength(1);
+}
 
-	VecCopy(p, m_pos);
-
-}	// HermiteSpline::getState
-
-void HermiteSpline::setState(double* p)
+ControlPoint HermiteSpline::getPointAtLength(float s)
 {
+	ControlPoint point = ControlPoint();
+	return point; //so it compiles
+}
 
-	VecCopy(m_pos, p);
+float HermiteSpline::getU(double s)
+{
+	auto lower_bound = std::lower_bound(lookUpTable.begin(), lookUpTable.end(), s, [](LookUpTableEntry a, double b) {return a.arcLength < b; });
+	int index = std::distance(lookUpTable.begin(), lower_bound);
 
-}	// HermiteSpline::setState
+	// lerp between lookUpTable[index].u and lookUpTable[index-1].u 
+
+	//return ((s - lookUpTable[index].arcLength) / (lookUpTable[index].u - lookUpTable[index - 1].u)) + lookUpTable[index - 1].u;
+	return s;
+}
+
 
 
 
@@ -271,9 +281,30 @@ ControlPoint HermiteSpline::getNext(ControlPoint start, ControlPoint end, double
 	return nextPoint;
 } // HermiteSpline::getNext
 
+ControlPoint HermiteSpline::getNextFirstOrder(ControlPoint start, ControlPoint end, double t)
+{
+	ControlPoint nextPoint;
+	nextPoint.point = float(6 * pow(t, 2) - 6 * t) * start.point
+		+ float(-6 * pow(t, 2) + 6 * t) * end.point
+		+ float(3*(pow(t, 2)) - 4 * t + 1) * start.tangent
+		+ float(3*(pow(t, 2)) - 2*t) * end.tangent;
+	return nextPoint;
+} // HermiteSpline::getNext
+
+ControlPoint HermiteSpline::getNextSecondOrder(ControlPoint start, ControlPoint end, double t)
+{
+	ControlPoint nextPoint;
+	nextPoint.point = float(12 * t - 6) * start.point
+		+ float(-12 * t + 6) * end.point
+		+ float(6*t - 4) * start.tangent
+		+ float(6*t - 2) * end.tangent;
+	return nextPoint;
+} // HermiteSpline::getNext
+
 
 void HermiteSpline::updateLookUpTable()
 {
+
 	lookUpTable.clear();
 	float totalSamples = ((numKnots - 1) * 1000 + numKnots);
 	float deltaU = 1.0 / totalSamples;
@@ -349,6 +380,8 @@ void HermiteSpline::display(GLenum mode)
 	glVertex3f(controlPoints[numKnots - 1].point.x, controlPoints[numKnots - 1].point.y, controlPoints[numKnots - 1].point.z);
 	
 	glEnd();
+
+
 	
 	glColor3f(0.3, 0.7, 0.1);
 
