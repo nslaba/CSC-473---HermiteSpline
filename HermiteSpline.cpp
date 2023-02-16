@@ -39,8 +39,8 @@ float HermiteSpline::getU(LookUpTableEntry s)
 	}
 	//lerp between lookUpTable[index].u and lookUpTable[index-1].u 
 
-	animTcl::OutputMessage("u in getU in HS is: ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(u).c_str()));
+	/*animTcl::OutputMessage("u in getU in HS is: ");
+	animTcl::OutputMessage(const_cast<char*>(std::to_string(u).c_str()));*/
 	return u;
 }
 
@@ -54,16 +54,11 @@ ControlPoint HermiteSpline::getPointAtU(float u)
 	//find deltaU
 	float totalSamples = numKnots-1;
 	float deltaU = 1.0 / totalSamples;
-	animTcl::OutputMessage("totalSamples in getPointAtU in HS is: ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(totalSamples).c_str()));
-	animTcl::OutputMessage("deltaU in getPointAtU in HS is: ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(deltaU).c_str()));
-	// divide u by deltaU and get the right index
 	int indexFirst = (int)(u / deltaU);
-	animTcl::OutputMessage("index in getPointAtU in HS is: ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(indexFirst).c_str()));
+
 	// mod u by deltaU and get the correct remainder
-	float remainder = u - (deltaU * indexFirst);
+	float remainder = (u - (deltaU * indexFirst))/deltaU;
+
 	// use getNext to find the right ControlPoint
 	point = getNext(controlPoints[indexFirst], controlPoints[indexFirst + 1], remainder);
 	return point; 
