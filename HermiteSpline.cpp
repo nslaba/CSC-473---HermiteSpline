@@ -30,35 +30,46 @@ float HermiteSpline::getU(LookUpTableEntry s)
 	float u;
 	auto lower_bound = std::lower_bound(lookUpTable.begin(), lookUpTable.end(), s, [](LookUpTableEntry a, LookUpTableEntry b) {return a.arcLength < b.arcLength; });
 	int index = std::distance(lookUpTable.begin(), lower_bound);
-	animTcl::OutputMessage("index in getU in HS is: ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(index).c_str()));
+	
 	if (s.arcLength < lookUpTable[index].arcLength) { // LERP between the two u indeces--> but the relationship between s and u isn't linear so how can you?
-
+		u = lookUpTable[index].u - ((s.arcLength/lookUpTable[index].arcLength)*(lookUpTable[index].u-lookUpTable[index-1].u));
+	}
+	else {
+		u = lookUpTable[index].u;
 	}
 	//lerp between lookUpTable[index].u and lookUpTable[index-1].u 
 
-	//return ((lookUpTable[index].arcLength-s.arcLength) / (lookUpTable[index].u - lookUpTable[index - 1].u)) + lookUpTable[index - 1].u;
-	return lookUpTable[index].u;
+	animTcl::OutputMessage("u in getU in HS is: ");
+	animTcl::OutputMessage(const_cast<char*>(std::to_string(u).c_str()));
+	return u;
 }
 
 // Given a u parameter find the correct control point related to it
 ControlPoint HermiteSpline::getPointAtU(float u)
 {
 	// Innitialize the position
-	ControlPoint position = ControlPoint();
+	ControlPoint point = ControlPoint();
 	/* STEP 1 Find the right index*/
 
 	//find deltaU
-	float totalSamples = lookUpTable.size() - 1;
+	float totalSamples = numKnots-1;
 	float deltaU = 1.0 / totalSamples;
+	animTcl::OutputMessage("totalSamples in getPointAtU in HS is: ");
+	animTcl::OutputMessage(const_cast<char*>(std::to_string(totalSamples).c_str()));
+	animTcl::OutputMessage("deltaU in getPointAtU in HS is: ");
+	animTcl::OutputMessage(const_cast<char*>(std::to_string(deltaU).c_str()));
 	// divide u by deltaU and get the right index
 	int indexFirst = (int)(u / deltaU);
+	animTcl::OutputMessage("index in getPointAtU in HS is: ");
+	animTcl::OutputMessage(const_cast<char*>(std::to_string(indexFirst).c_str()));
 	// mod u by deltaU and get the correct remainder
 	float remainder = u - (deltaU * indexFirst);
 	// use getNext to find the right ControlPoint
-	position = getNext(controlPoints[indexFirst], controlPoints[indexFirst + 1], remainder);
-	return position; 
+	point = getNext(controlPoints[indexFirst], controlPoints[indexFirst + 1], remainder);
+	return point; 
 }
+
+
 
 
 int HermiteSpline::command(int argc, myCONST_SPEC char** argv)
@@ -293,32 +304,27 @@ void HermiteSpline::load(std::string filename)
 ControlPoint HermiteSpline::getNext(ControlPoint start, ControlPoint end, double t)
 {
 	ControlPoint nextPoint;
+	// Update the point
 	nextPoint.point = float(2 * pow(t, 3) - 3 * pow(t,2) + 1) * start.point 
 		+ float(-2 * pow(t,3) + 3 * pow(t, 2)) * end.point
 		+ float(pow(t,3) - 2 * pow(t,2) + t) * start.tangent 
 		+ float(pow(t, 3) - pow(t, 2)) * end.tangent;
-	return nextPoint;
-} // HermiteSpline::getNext
 
-ControlPoint HermiteSpline::getNextFirstOrder(ControlPoint start, ControlPoint end, double t)
-{
-	ControlPoint nextPoint;
-	nextPoint.point = float(6 * pow(t, 2) - 6 * t) * start.point
+	// Update the tangent
+	nextPoint.tangent = float(6 * pow(t, 2) - 6 * t) * start.point
 		+ float(-6 * pow(t, 2) + 6 * t) * end.point
-		+ float(3*(pow(t, 2)) - 4 * t + 1) * start.tangent
-		+ float(3*(pow(t, 2)) - 2*t) * end.tangent;
+		+ float(3 * (pow(t, 2)) - 4 * t + 1) * start.tangent
+		+ float(3 * (pow(t, 2)) - 2 * t) * end.tangent;
+
+	// Update the second tangent
+	nextPoint.secondTangent = float(12 * t - 6) * start.point
+		+ float(-12 * t + 6) * end.point
+		+ float(6 * t - 4) * start.tangent
+		+ float(6 * t - 2) * end.tangent;
+
 	return nextPoint;
 } // HermiteSpline::getNext
 
-ControlPoint HermiteSpline::getNextSecondOrder(ControlPoint start, ControlPoint end, double t)
-{
-	ControlPoint nextPoint;
-	nextPoint.point = float(12 * t - 6) * start.point
-		+ float(-12 * t + 6) * end.point
-		+ float(6*t - 4) * start.tangent
-		+ float(6*t - 2) * end.tangent;
-	return nextPoint;
-} // HermiteSpline::getNext
 
 
 void HermiteSpline::updateLookUpTable()

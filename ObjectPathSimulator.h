@@ -37,7 +37,7 @@ protected:
 	float m_speedInit = 0; // initial velocity
 	glm::vec3 m_pos;
 	// FOR NOW: set threeDmodel's velocity to a constant
-	float m_speed = 0.03;
+	float m_speed = 4;
 
 	ThreeDModel* m_threeDmodel;
 	HermiteSpline* splinePath;

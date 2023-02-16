@@ -30,10 +30,11 @@ public:
 	 /*Setters needed for simulation*/
 	// returns the full length --> to know how long the max length is
 	float getFullLength();
-	// returns a Control point at a certain parameter u of the spline
-	ControlPoint getPointAtU(float u);
+	
 	// returns parameter U based on arclength S
 	float getU(LookUpTableEntry);
+	// returns a Control point at a certain parameter u of the spline
+	ControlPoint getPointAtU(float u);
 
 
 	// Nescessary functions
@@ -42,8 +43,6 @@ public:
 	float getArcLength(float t);
 	void load(std::string);
 	ControlPoint getNext(ControlPoint, ControlPoint, double);
-	ControlPoint getNextFirstOrder(ControlPoint, ControlPoint, double);
-	ControlPoint getNextSecondOrder(ControlPoint, ControlPoint, double);
 	void updateLookUpTable();
 
 	// Nescessary variables
