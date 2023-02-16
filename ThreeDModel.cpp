@@ -34,7 +34,7 @@ void ThreeDModel::display(GLenum mode)
 	glPushMatrix();
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	glTranslated(position[0], position[1], position[2]);
-	glScalef(0.05f, 0.05f, 0.05f);
+	glScalef(0.02f, 0.02f, 0.02f);
 
 	if (m_model.numvertices > 0)
 		glmDraw(&m_model, GLM_SMOOTH | GLM_MATERIAL);

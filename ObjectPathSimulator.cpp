@@ -21,28 +21,31 @@ int ObjectPathSimulator::step(double time)
 	/*STEP 2. a) Calculate distance travelled by object assuming innitial velocity is fixed for now*/
 
 	float distanceTravelled = time * m_speed;
-	
+	//if distanceTravelled is greater than or equal to the length of the spine then make it equal to full length
+	if (distanceTravelled >= fullPathLength) distanceTravelled = fullPathLength;
 	
 	//TEST BEFORE MOVING ON
-	/*animTcl::OutputMessage("ArcLength in simulator is: ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(s).c_str()));*/
+	/*animTcl::OutputMessage("distanceTravelled in simulator is: ");
+	animTcl::OutputMessage(const_cast<char*>(std::to_string(distanceTravelled).c_str()));*/
 
-	/* STEP 2. b) get parameter U based on arclength S*/
-	/*double u = m_object->getU(s);*/
+	/* STEP 2. b) get parameter U based on distance travelled by threeDModel*/
+	// make distance travelled a LookUpTableEntry
+	LookUpTableEntry tempEntry = LookUpTableEntry();
+	tempEntry.arcLength = distanceTravelled;
+	double u = splinePath->getU(tempEntry);
 
 	//TEST BEFORE MOVING ON
-	
+	/*animTcl::OutputMessage("u in simulator is: ");
+	animTcl::OutputMessage(const_cast<char*>(std::to_string(u).c_str()));*/
+
 	/* STEP 2. c) get POSITION of m_threeDmodel based on U--> use first and last points on the spline*/
-	
-	/*m_object->getState(pos);*/
-	/*pos = float(2 * pow(u, 3) - 3 * pow(u, 2) + 1) * HermiteSpline::lookUpTable[0].point
-		+ float(-2 * pow(u, 3) + 3 * pow(u, 2)) * end.point
-		+ float(pow(u, 3) - 2 * pow(u, 2) + u) * start.tangent
-		+ float(pow(u, 3) - pow(u, 2)) * end.tangent;*/
+		// Right now I am interpolating between first and last point. But I have to find the position along the spline
+	m_threeDmodel->position = splinePath->getPointAtU(u).point;
+
+	/*animTcl::OutputMessage("x position in simulator is: ");
+	animTcl::OutputMessage(const_cast<char*>(std::to_string(m_threeDmodel->position.x).c_str()));*/
 
 	
-
-	/*m_object->setState(pos);*/
 	// Once I have position calculate first and second derrivatives in order to solve for u,v, w of the object
 	
 

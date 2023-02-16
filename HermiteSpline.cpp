@@ -22,24 +22,38 @@ float HermiteSpline::getFullLength()
 	return getArcLength(1);
 }
 
-ControlPoint HermiteSpline::getPointAtLength(float s)
-{
-	ControlPoint point = ControlPoint();
-	return point; //so it compiles
-}
 
-float HermiteSpline::getU(double s)
+
+// Given some distance travelled along the spline, Find the U pair in the lookUpTable
+float HermiteSpline::getU(LookUpTableEntry s)
 {
-	auto lower_bound = std::lower_bound(lookUpTable.begin(), lookUpTable.end(), s, [](LookUpTableEntry a, double b) {return a.arcLength < b; });
+	auto lower_bound = std::lower_bound(lookUpTable.begin(), lookUpTable.end(), s, [](LookUpTableEntry a, LookUpTableEntry b) {return a.arcLength < b.arcLength; });
 	int index = std::distance(lookUpTable.begin(), lower_bound);
 
-	// lerp between lookUpTable[index].u and lookUpTable[index-1].u 
+	//lerp between lookUpTable[index].u and lookUpTable[index-1].u 
 
 	//return ((s - lookUpTable[index].arcLength) / (lookUpTable[index].u - lookUpTable[index - 1].u)) + lookUpTable[index - 1].u;
-	return s;
+	return lookUpTable[index].u;
 }
 
+// Given a u parameter find the correct control point related to it
+ControlPoint HermiteSpline::getPointAtU(float u)
+{
+	// Innitialize the position
+	ControlPoint position = ControlPoint();
+	/* STEP 1 Find the right index*/
 
+	//find deltaU
+	float totalSamples = lookUpTable.size() - 1;
+	float deltaU = 1.0 / totalSamples;
+	// divide u by deltaU and get the right index
+	int indexFirst = (int)(u / deltaU);
+	// mod u by deltaU and get the correct remainder
+	float remainder = u - (deltaU * indexFirst);
+	// use getNext to find the right ControlPoint
+	position = getNext(controlPoints[indexFirst], controlPoints[indexFirst + 1], remainder);
+	return position; 
+}
 
 
 int HermiteSpline::command(int argc, myCONST_SPEC char** argv)

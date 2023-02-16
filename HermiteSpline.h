@@ -30,10 +30,10 @@ public:
 	 /*Setters needed for simulation*/
 	// returns the full length --> to know how long the max length is
 	float getFullLength();
-	// returns a Control point at a certain length on the spline
-	ControlPoint getPointAtLength(float s);
+	// returns a Control point at a certain parameter u of the spline
+	ControlPoint getPointAtU(float u);
 	// returns parameter U based on arclength S
-	float getU(double s);
+	float getU(LookUpTableEntry);
 
 
 	// Nescessary functions
@@ -48,16 +48,16 @@ public:
 
 	// Nescessary variables
 	std::vector <LookUpTableEntry> lookUpTable;
-	
-	
+	/* Define an array of ControlPoint structs with maximum of 40 control points*/
+	ControlPoint controlPoints[MAX_KNOTS];
+	//keeps track of the knots set by the user
+	int numKnots = 0;
 
 
 protected:
 	
-	/* Define an array of ControlPoint structs with maximum of 40 control points*/
-	ControlPoint controlPoints[MAX_KNOTS];	
+		
 
-	//keeps track of the knots set by the user
-	int numKnots = 0;
+	
 
 };
