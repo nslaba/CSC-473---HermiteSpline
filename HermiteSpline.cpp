@@ -27,12 +27,17 @@ float HermiteSpline::getFullLength()
 // Given some distance travelled along the spline, Find the U pair in the lookUpTable
 float HermiteSpline::getU(LookUpTableEntry s)
 {
+	float u;
 	auto lower_bound = std::lower_bound(lookUpTable.begin(), lookUpTable.end(), s, [](LookUpTableEntry a, LookUpTableEntry b) {return a.arcLength < b.arcLength; });
 	int index = std::distance(lookUpTable.begin(), lower_bound);
+	animTcl::OutputMessage("index in getU in HS is: ");
+	animTcl::OutputMessage(const_cast<char*>(std::to_string(index).c_str()));
+	if (s.arcLength < lookUpTable[index].arcLength) { // LERP between the two u indeces--> but the relationship between s and u isn't linear so how can you?
 
+	}
 	//lerp between lookUpTable[index].u and lookUpTable[index-1].u 
 
-	//return ((s - lookUpTable[index].arcLength) / (lookUpTable[index].u - lookUpTable[index - 1].u)) + lookUpTable[index - 1].u;
+	//return ((lookUpTable[index].arcLength-s.arcLength) / (lookUpTable[index].u - lookUpTable[index - 1].u)) + lookUpTable[index - 1].u;
 	return lookUpTable[index].u;
 }
 

@@ -35,8 +35,8 @@ int ObjectPathSimulator::step(double time)
 	double u = splinePath->getU(tempEntry);
 
 	//TEST BEFORE MOVING ON
-	/*animTcl::OutputMessage("u in simulator is: ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(u).c_str()));*/
+	animTcl::OutputMessage("u in simulator is: ");
+	animTcl::OutputMessage(const_cast<char*>(std::to_string(u).c_str()));
 
 	/* STEP 2. c) get POSITION of m_threeDmodel based on U--> use first and last points on the spline*/
 		// Right now I am interpolating between first and last point. But I have to find the position along the spline
