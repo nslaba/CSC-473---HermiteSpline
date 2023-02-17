@@ -18,7 +18,7 @@ public:
 
 	ObjectPathSimulator(const std::string& name, HermiteSpline* targetPath, ThreeDModel* targetObject);
 	~ObjectPathSimulator();
-
+	double distance(double time);
 	int step(double time);
 	int init(double time)
 	{
@@ -35,10 +35,7 @@ protected:
 
 	glm::vec3 m_pos0; // initial position
 	float m_speedInit = 0; // initial velocity
-	glm::vec3 m_pos;
-	// FOR NOW: set threeDmodel's velocity to a constant
-	float m_speed = 4;
-
+	
 	ThreeDModel* m_threeDmodel;
 	HermiteSpline* splinePath;
 

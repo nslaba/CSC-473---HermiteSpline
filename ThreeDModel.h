@@ -35,6 +35,7 @@ public:
 	float distanceTravelled;
 	// Velocity
 	float velocity;
+
 	// Orientation UVW
 	glm::vec3 u;
 	glm::vec3 w;
