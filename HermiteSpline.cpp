@@ -311,6 +311,7 @@ ControlPoint HermiteSpline::getNext(ControlPoint start, ControlPoint end, double
 		+ float(3 * (pow(t, 2)) - 4 * t + 1) * start.tangent
 		+ float(3 * (pow(t, 2)) - 2 * t) * end.tangent;
 
+
 	// Update the second tangent
 	nextPoint.secondTangent = float(12 * t - 6) * start.point
 		+ float(-12 * t + 6) * end.point

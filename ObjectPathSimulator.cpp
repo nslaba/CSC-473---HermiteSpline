@@ -55,6 +55,10 @@ int ObjectPathSimulator::step(double time)
 	m_threeDmodel->u = glm::cross(point.tangent, point.secondTangent);
 	m_threeDmodel->v = glm::cross(m_threeDmodel->w, m_threeDmodel->u);
 
+	//normalize them
+	m_threeDmodel->w = glm::normalize(m_threeDmodel->w);
+	m_threeDmodel->u = glm::normalize(m_threeDmodel->u);
+	m_threeDmodel->v = glm::normalize(m_threeDmodel->v);
 	/* STEP 2) b. use quaternions for object rotation*/
 
 	
