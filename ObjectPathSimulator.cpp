@@ -12,68 +12,72 @@ ObjectPathSimulator::~ObjectPathSimulator()
 }	// ObjectPathSimulator::~ObjectPathSimulator
 
 /* Distance: takes in parameterized time and returns local distance*/
-double ObjectPathSimulator::distance(double t)
+double ObjectPathSimulator::d(double t)
 {
-	/* STEP 1: update time constants*/
-
-	double t1 = 0.1;
-	double t2 = 0.9;
 
 	/* STEP 2: update constants*/
-	float a0 = 100; // not a0 != -a1 nescessairly
-	float vm = a0 * t1;
 
+	float vm = A0 * T1;
 	/* STEP 3: Initialize velocities for each segment & distanceTravelled*/
-	float v1 = vm * (t / t1); // Increasing over time
+	float v1 = vm * (t / T1); // Increasing over time
 	float v2 = vm; //max velocity
-	float v3 = vm * (1.0 - ((t - t2) / (1.0 - t2))); // Decreasing over time
-
-	animTcl::OutputMessage("v3 after calculated is: ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(v3).c_str()));
-
-	animTcl::OutputMessage("for t: ");
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(t).c_str()));
+	float v3 = vm * (1.0 - ((t - T2) / (1.0 - T2))); // Decreasing over time
 
 	float distanceTravelled = 0;
 
 	/* STEP 4: update distanceTravelled based on acceleration */
 
-	if (t <= 0.1)
+	if (t <= T1)
 	{
-		distanceTravelled = v1 * (pow(t, 2)) / (2.0 * t1);
-		animTcl::OutputMessage(" in t<=0.1 ");
-
-		/*animTcl::OutputMessage("v1 is: ");
-		animTcl::OutputMessage(const_cast<char*>(std::to_string(v1).c_str()));*/
-
-		animTcl::OutputMessage("distance travelled is for t<=0.1: ");
-		animTcl::OutputMessage(const_cast<char*>(std::to_string(distanceTravelled).c_str()));
+		distanceTravelled = v1 * (pow(t, 2)) / (2.0 * T1);
 	}
-	else if (t > 0.1 && t < 0.9)
+	else if (t > T1 && t <= T2)
 	{
-		distanceTravelled = vm * (t1 / 2.0) + v2 * (t - t1);
-		animTcl::OutputMessage(" in t> 0.1 && t< 0.9 ");
-
-		/*animTcl::OutputMessage("v2 is: ");
-		animTcl::OutputMessage(const_cast<char*>(std::to_string(v2).c_str()));*/
-
-		animTcl::OutputMessage("distance travelled is for t>=0.1 and t<0.9: ");
-		animTcl::OutputMessage(const_cast<char*>(std::to_string(distanceTravelled).c_str()));
+		distanceTravelled = vm * (T1 / 2.0) + v2 * (t - T1);
 	}
-	else
+	else if (t > T2 && t<1)
 	{
-		animTcl::OutputMessage("v3 in else before is: ");
-		animTcl::OutputMessage(const_cast<char*>(std::to_string(v3).c_str()));
-		distanceTravelled = vm * (t1 / 2.0) + v2 * (t2 - t1) + v3 * (t - t2) * (1 - (t - t2) / (2 * (1 - t2)));
-
-
-		animTcl::OutputMessage("distance travelled is for t>=0.9: ");
-		animTcl::OutputMessage(const_cast<char*>(std::to_string(distanceTravelled).c_str()));
-
-		
+		distanceTravelled = (vm * (T1 / 2.0)				// before t1
+			+ vm * (T2 - T1)								// btwn t1 and t2
+			+ (vm  - (vm*(t - T2)/(1-T2))/2)*(t-T2));		// after t2				
+	}
+	else {
+		distanceTravelled = vm * (T1 / 2.0) +
+			v2 * (T2 - T1) +
+			vm * (1.0 - T2) * (1.0/2.0);
 	}
 
 	return distanceTravelled;
+}
+
+
+double ObjectPathSimulator::distance(double time)
+{
+	
+	float fullLength = splinePath->getFullLength();
+	float vm = 10;
+
+	double t0 = fullLength / (5 * vm);
+	double t1 = 4 * t0;
+
+	float distance = 0;
+	double a0 = vm / t0;
+	if (time < t0) {
+		// b X h / 2
+		
+		distance = a0 * pow(time, 2) / 2.0;
+	}
+	else if (time >= t0 && time < (t0 + t1)) {
+		// b X h / 2 + b X h
+		distance = (fullLength / 10.0) + vm * (time - t0);
+	}
+	else if (time > (t0+t1) && time < (2*t0 + t1)){
+		distance = fullLength - (a0 * (pow(2 * t0 + t1 - time, 2)) / 2);
+	}
+	else {
+		distance = fullLength;
+	}
+	return distance;
 }
 
 int ObjectPathSimulator::step(double time)
@@ -82,12 +86,15 @@ int ObjectPathSimulator::step(double time)
 
 	/* STEP 1. a) parameterize time to be between 0 and 1*/
 
-	double t = time / 5.0; // 5 seconds for the whole animation
+	double t = time / SCENE; // 10 seconds for the whole animation
 
 	/* STEP 1. b) Parameterize distance and then cast it*/
 
-	double distanceTravelled = (distance(t) / distance(1.0)) * splinePath->getFullLength();
-	if (t >= 0.9) distanceTravelled = splinePath->getFullLength();
+	double dTravelled = (d(t) / d(1.0)) * splinePath->getFullLength();
+
+	if (t >= 0.99) dTravelled = splinePath->getFullLength();
+
+	float distanceTravelled = distance(time);
 
 	/* STEP 2: Calculate position based on P(u(s(t)))*/
 		
@@ -97,26 +104,7 @@ int ObjectPathSimulator::step(double time)
 	animTcl::OutputMessage("for t: ");
 	animTcl::OutputMessage(const_cast<char*>(std::to_string(t).c_str()));
 
-
-	animTcl::OutputMessage("non parameterized distance at t= 1: ");
-	double d1 = distance(1);
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(d1).c_str()));
-
-	animTcl::OutputMessage("non parameterized distance at t= 0.9: ");
-	double d2 = distance(0.9);
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(d2).c_str()));
-
-	animTcl::OutputMessage("non parameterized distance d(0.15)/ d(1.0): ");
-	double d3 = d2/d1;
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(d3).c_str()));
-
-	animTcl::OutputMessage("parameterized distance d(0.1)/ d(1.0) * full length: ");
-	double d4 = d2 / d1 * splinePath->getFullLength();
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(d4).c_str()));
-
-	animTcl::OutputMessage("full length: ");
-	double d5 = splinePath->getFullLength();
-	animTcl::OutputMessage(const_cast<char*>(std::to_string(d5).c_str()));*/
+	*/
 
 	/* STEP 2. b) get parameter U based on distance travelled by threeDModel*/
 	LookUpTableEntry tempEntry = LookUpTableEntry();
