@@ -26,6 +26,14 @@ Build a Hermite Spline system and a simulator
 ## Summary
 I have implemented the assignment according to the specifications listed
 
+The object following the Hermite Spline always stays upright and rotates based on the spline's curves:
+
+![Screenshot (6)](https://user-images.githubusercontent.com/77686772/227577245-e4423d00-234f-46af-8564-48ace3ecdd8e.png)
+
+![Screenshot (7)](https://user-images.githubusercontent.com/77686772/227577698-f1fbbeff-ddce-4fdd-8886-85b4ff8fd0b0.png)
+
+![Screenshot (8)](https://user-images.githubusercontent.com/77686772/227577810-d2de61f9-b381-407a-b569-6a92e9956b57.png)
+
 ## Functionality
 My project first deals with the input text file by reading it and creating a hermite spline path based on the given control points. 
 
